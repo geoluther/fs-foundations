@@ -28,7 +28,7 @@ def newRestaurant():
             name=request.form['name'])
         session.add(restName)
         session.commit()
-        #flash("New Restaurant Created")
+        flash("New Restaurant Created")
         return redirect(url_for('showRestaurants'))
     else:
     	return render_template('newRestaurant.html')
@@ -52,6 +52,7 @@ def editRestaurant(restaurant_id):
 		restaurant.name = request.form['name']
 		session.add(restaurant)
 		session.commit()
+		flash("Restaurant Name Edited")
 		return redirect(url_for('showRestaurants'))
 	else:
 		return render_template('editRestaurant.html', restaurant = restaurant)
@@ -81,6 +82,7 @@ def newMenuItem(restaurant_id):
 			'description'], price=request.form['price'], course=request.form['course'], restaurant_id=restaurant_id)
 		session.add(newItem)
 		session.commit()
+		flash("menu item added")
 		return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
 	else:
 		return render_template('newmenuitem.html', restaurant_id=restaurant_id)
@@ -103,6 +105,7 @@ def editMenuItem(restaurant_id, menu_id):
             editedItem.course = request.form['course']
         session.add(editedItem)
         session.commit()
+        flash("menu item edited")
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
     else:
 
@@ -128,6 +131,13 @@ def deleteMenuItem(restaurant_id, menu_id):
 	# return "page to delete a menu item. Task 3 complete!"
 
 ## ENDPOINTS
+
+## all restaurants menu endpoint
+@app.route('/restaurants/JSON')
+def restaurantsJSON():
+    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(Restaurant).all()
+    return jsonify(Restaurants=[i.serialize for i in items])
 
 ## restaurant menu endpoint
 @app.route('/restaurant/<int:restaurant_id>/menu/JSON')
