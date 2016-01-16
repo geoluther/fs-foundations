@@ -2,24 +2,23 @@
 <html>
 <head>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-	</head>
+</head>
 <body>
 
-<h1>Edit Restaurant: {{restaurant.name}}</h1>
+	<h1>Edit Restaurant: {{restaurant.name}}</h1>
 
-<div class = 'pane'>
-<form action="{{ url_for('editRestaurant', restaurant_id = restaurant.id)}}" method = 'post'>
+	<div class = 'pane'>
+		<form action="{{ url_for('editRestaurant', restaurant_id = restaurant.id)}}" method = 'post'>
 
-<dl>
-	<dt>Edit Name:</dt>
-		<dd><input type ='text' size='30' name='name' placeholder='{{restaurant.name}}'></dd>
-</dl>
+			<dl>
+				<dt>Edit Name:</dt>
+				<dd><input type ='text' size='30' name='name' placeholder='{{restaurant.name}}'></dd>
+			</dl>
 
-<input type='submit' value='Edit'><a href="{{ url_for('showRestaurants')}}"> Cancel </a>
+			<input type='submit' value='Edit'><a href="{{ url_for('showRestaurants')}}"> Cancel </a>
 
-</form>
+		</form>
 
-</div>
-
+	</div>
 </body>
 </html>
