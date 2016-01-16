@@ -19,7 +19,7 @@
 		<a href = '{{ url_for('restaurantMenu', restaurant_id = r.id) }}'>
 			<h2>{{r.name}}</h2>
 		</a></p>
-		<span><a href = '#'>Edit</a></span>
+		<span><a href = '{{ url_for('editRestaurant', restaurant_id = r.id) }}'>Edit</a></span>
 		<span><a href = '#'>Delete</a></span>
 		</div>
 
