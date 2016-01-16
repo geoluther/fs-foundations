@@ -11,48 +11,52 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
-def restaurantMenuJSON(restaurant_id):
-    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    items = session.query(MenuItem).filter_by(
-        restaurant_id=restaurant_id).all()
-    return jsonify(MenuItems=[i.serialize for i in items])
-
-
-@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
-def menuItemJSON(restaurant_id, menu_id):
-    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    item = session.query(MenuItem).filter_by(
-        id=menu_id).one()
-    return jsonify(MenuItem=item.serialize)
-
-
-
+## create main restaurant page
 @app.route('/')
-def DefaultRestaurantMenu():
-	restaurant = session.query(Restaurant).first()
-	items = session.query(MenuItem).filter_by(restaurant_id = restaurant.id)
-	output = ''
-	output += "<h2>"
-	output += restaurant.name
-	output += "</h2>"
-	for i in items:
-		output += i.name
-		output += '</br>'
-		output += i.price
-		output += '</br>'
-		output += i.description
-		output += '</br>'
-		output += '</br>'
-
-	return output
+@app.route('/restaurants/')
+def showRestaurants():
+	restaurants = session.query(Restaurant).all()
+	return render_template('main.html', restaurants=restaurants)
+    # return "page to list restaurants complete!"
 
 
+## create a new restaurant
+@app.route('/restaurant/new')
+def newRestaurant():
+    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    # items = session.query(MenuItem).filter_by(
+    #     restaurant_id=restaurant_id).all()
+    # return jsonify(MenuItems=[i.serialize for i in items])
+    return "page to CREATE a new restaurant done"
+
+
+## show restaurant menu by rest. id
 @app.route('/restaurant/<int:restaurant_id>/')
+@app.route('/restaurant/<int:restaurant_id>/menu/')
 def restaurantMenu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
     return render_template('menu.html', restaurant=restaurant, items=items)
+
+
+## edit a restaurant
+@app.route('/restaurant/<int:restaurant_id>/edit')
+def editRestaurant(restaurant_id):
+    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    # items = session.query(MenuItem).filter_by(
+    #     restaurant_id=restaurant_id).all()
+    # return jsonify(MenuItems=[i.serialize for i in items])
+    return "EDIT page for restaurant %s done" % restaurant_id
+
+
+## delete a restaurant
+@app.route('/restaurant/<int:restaurant_id>/delete')
+def deleteRestaurant(restaurant_id):
+    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    # items = session.query(MenuItem).filter_by(
+    #     restaurant_id=restaurant_id).all()
+    # return jsonify(MenuItems=[i.serialize for i in items])
+    return "page to DELETE a new restaurant done"
 
 
 # Task 1: Create route for newMenuItem function here
@@ -104,6 +108,25 @@ def deleteMenuItem(restaurant_id, menu_id):
 		return render_template('deletemenuitem.html', restaurant_id = restaurant_id,
 			MenuID = menu_id, item = deletedItem)
 	# return "page to delete a menu item. Task 3 complete!"
+
+## ENDPOINTS
+
+## restaurant menu endpoint
+@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
+def restaurantMenuJSON(restaurant_id):
+    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id).all()
+    return jsonify(MenuItems=[i.serialize for i in items])
+
+## menu item endpoint
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
+def menuItemJSON(restaurant_id, menu_id):
+    #restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    item = session.query(MenuItem).filter_by(
+        id=menu_id).one()
+    return jsonify(MenuItem=item.serialize)
+
 
 if __name__ == '__main__':
 	app.secret_key = 'super_secret_key'
